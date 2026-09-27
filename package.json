@@ -1,0 +1,31 @@
+{
+  "name": "job-event-processing-service",
+  "version": "1.0.0",
+  "description": "High-reliability distributed job event ingestion and monotonic projection engine",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/src/api/server.js",
+    "dev": "tsx watch src/api/server.ts",
+    "worker": "tsx src/worker/index.ts",
+    "test": "vitest run",
+    "test:unit": "vitest run test/unit",
+    "test:integration": "vitest run test/integration",
+    "setup": "tsx scripts/setup.ts",
+    "demo": "tsx scripts/demo.ts",
+    "load-test": "tsx scripts/load-test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "fastify": "^5.2.1",
+    "mongodb": "^6.14.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}
