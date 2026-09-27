@@ -1,5 +1,5 @@
 # Task 2.1: MongoDB Connection and Health Probe
-Status: TODO
+Status: DONE
 
 ## Objective
 Implement a robust MongoDB client singleton with lifecycle management, connection pooling, graceful shutdown handlers, and health probe utility (`ping`).
