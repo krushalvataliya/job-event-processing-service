@@ -1,5 +1,5 @@
 # Task 2.2: MongoDB Indexes and Schema Management
-Status: TODO
+Status: DONE
 
 ## Objective
 Define and create the required indexes across `events` and `jobs` collections, and build an initialization routine that guarantees schema and index consistency at service boot.
