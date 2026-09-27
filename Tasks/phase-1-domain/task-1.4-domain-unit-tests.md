@@ -1,5 +1,5 @@
 # Task 1.4: Domain Unit Tests
-Status: TODO
+Status: DONE
 
 ## Objective
 Author comprehensive, hermetic unit tests in `test/unit/` covering event validation, normalization, and canonical hashing without requiring any database or external dependencies.
