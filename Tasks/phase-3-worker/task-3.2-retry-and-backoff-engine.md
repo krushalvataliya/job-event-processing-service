@@ -1,4 +1,5 @@
 # Task 3.2: Retry and Backoff Engine
+Status: TODO
 
 ## Objective
 Implement exponential backoff calculation and retry scheduling rules with configurable limits and injectable time providers for deterministic testing.

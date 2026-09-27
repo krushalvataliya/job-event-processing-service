@@ -1,4 +1,5 @@
 # Task 6.3: Load Execution and Results Capture
+Status: TODO
 
 ## Objective
 Execute the load test suite, verify system stability under heavy concurrent load, and record actual measured benchmark metrics for inclusion in `SCALE.md`.

@@ -1,4 +1,5 @@
 # Task 3.3: Worker Polling and Processing Loop
+Status: TODO
 
 ## Objective
 Implement the background worker loop that continuously claims eligible events, checks for staleness against the jobs projection, calls the fake verification provider, applies projection changes, and records attempt history.

@@ -1,4 +1,5 @@
 # Task 7.3: README and Demo Walkthrough Guide
+Status: TODO
 
 ## Objective
 Author high-impact, user-friendly `README.md` and `DEMO.md` guides providing clear setup commands, architectural orientation, API contracts, and a step-by-step operational walkthrough.

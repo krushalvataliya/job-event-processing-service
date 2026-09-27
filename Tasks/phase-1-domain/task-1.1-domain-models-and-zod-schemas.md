@@ -1,4 +1,5 @@
 # Task 1.1: Domain Models and Zod Schemas
+Status: DONE
 
 ## Objective
 Define the TypeScript types, interfaces, and strict Zod validation schemas for job change events, payloads, and projection entities.

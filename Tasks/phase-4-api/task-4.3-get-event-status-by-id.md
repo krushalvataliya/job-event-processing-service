@@ -1,4 +1,5 @@
 # Task 4.3: GET /events/:eventId (Event Processing Status)
+Status: TODO
 
 ## Objective
 Implement `GET /events/:eventId` allowing callers to inspect acceptance and processing state, attempt history, and failure reasons, strictly scoped by `tenantId` and `sourceId`.

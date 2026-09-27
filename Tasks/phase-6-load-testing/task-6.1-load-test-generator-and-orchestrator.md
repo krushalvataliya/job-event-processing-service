@@ -1,4 +1,5 @@
 # Task 6.1: Load Test Generator and Orchestrator
+Status: TODO
 
 ## Objective
 Implement synthetic data generation and concurrent ingestion harness in `scripts/load-test.ts` satisfying all PRD load testing specifications.

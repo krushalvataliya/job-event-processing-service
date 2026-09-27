@@ -1,4 +1,5 @@
 # Task 7.4: AI Usage Tracking (AI_USAGE.md)
+Status: TODO
 
 ## Objective
 Author the mandatory `AI_USAGE.md` document tracking every meaningful AI interaction, prompt excerpt, tools used, human code modifications, independent verification checks, and critical evaluations.

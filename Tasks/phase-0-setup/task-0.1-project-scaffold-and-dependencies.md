@@ -1,4 +1,5 @@
 # Task 0.1: Project Scaffold and Dependencies
+Status: DONE
 
 ## Objective
 Initialize the project repository with Node.js 22+, TypeScript strict mode, package manager configuration, test runner (Vitest), linter, code formatter, and core dependencies.

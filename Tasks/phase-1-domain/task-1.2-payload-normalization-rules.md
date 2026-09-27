@@ -1,4 +1,5 @@
 # Task 1.2: Payload Normalization Rules
+Status: DONE
 
 ## Objective
 Implement pure functions to normalize valid event payloads per PRD §6.1, ensuring consistent, trimmed, and deduplicated data before storage and hashing.

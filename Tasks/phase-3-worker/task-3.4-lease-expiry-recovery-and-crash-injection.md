@@ -1,4 +1,5 @@
 # Task 3.4: Lease Expiry Recovery and Crash Injection
+Status: TODO
 
 ## Objective
 Implement durable recovery for crashed or stalled workers based strictly on database lease expiration (`leaseExpiresAt`), and introduce test hooks to simulate deterministic crash-before-ack scenarios.

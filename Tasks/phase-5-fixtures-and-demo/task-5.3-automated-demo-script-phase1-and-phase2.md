@@ -1,4 +1,5 @@
 # Task 5.3: Automated Demo Script (Phase 1 & Phase 2)
+Status: TODO
 
 ## Objective
 Implement `scripts/demo.ts` providing an automated, one-command executable demonstration of the end-to-end service running the 20-request fixture through Phase 1, queue draining, Phase 2, final queue draining, and state verification.

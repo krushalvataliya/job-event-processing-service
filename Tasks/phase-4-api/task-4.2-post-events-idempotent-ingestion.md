@@ -1,4 +1,5 @@
 # Task 4.2: POST /events (Idempotent Ingestion Endpoint)
+Status: TODO
 
 ## Objective
 Implement `POST /events` route ensuring durable asynchronous event acceptance, strict validation, canonical hashing, insert-first idempotency, and correct HTTP status codes (`202`, `200`, `409`, `400`).

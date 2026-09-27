@@ -1,4 +1,5 @@
 # Task 0.2: Environment Configuration and Docker Compose
+Status: DONE
 
 ## Objective
 Establish reproducible environment configuration, strongly-typed config loading, and a Docker Compose specification for running local MongoDB.

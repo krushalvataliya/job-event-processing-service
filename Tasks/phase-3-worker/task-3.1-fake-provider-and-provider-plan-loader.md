@@ -1,4 +1,5 @@
 # Task 3.1: Fake Provider and Provider Plan Loader
+Status: TODO
 
 ## Objective
 Implement the simulated external verification provider client that reads plan definitions from `fixtures/provider-plan.json` and returns deterministic simulation outcomes per event and attempt count.

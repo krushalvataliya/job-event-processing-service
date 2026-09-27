@@ -1,4 +1,5 @@
 # Task 4.6: API Contract and Isolation Tests
+Status: TODO
 
 ## Objective
 Implement comprehensive HTTP integration tests in `test/integration/api.test.ts` testing the complete HTTP interface, all response codes, error scenarios, tenant isolation, and replay rules.

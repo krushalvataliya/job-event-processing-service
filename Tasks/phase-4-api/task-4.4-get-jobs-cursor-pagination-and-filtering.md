@@ -1,4 +1,5 @@
 # Task 4.4: GET /jobs (Cursor Pagination and Filtering)
+Status: TODO
 
 ## Objective
 Implement `GET /jobs` route providing deterministic cursor-based pagination and status filtering, strictly scoped to the requesting tenant.

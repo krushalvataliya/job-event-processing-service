@@ -1,4 +1,5 @@
 # Task 6.2: Latency, Throughput, and Drain Instrumentation
+Status: TODO
 
 ## Objective
 Implement precise latency, throughput, queue drain timing, and projection accuracy verification within `scripts/load-test.ts`.

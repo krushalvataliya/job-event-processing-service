@@ -1,4 +1,5 @@
 # Task 3.5: Worker Concurrency and Recovery Tests
+Status: TODO
 
 ## Objective
 Author integration tests in `test/integration/worker.test.ts` testing multiple competing worker loops, retry progression, permanent failures, and crash recovery with real MongoDB.

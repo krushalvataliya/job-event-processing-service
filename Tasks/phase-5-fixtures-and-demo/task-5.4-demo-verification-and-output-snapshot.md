@@ -1,4 +1,5 @@
 # Task 5.4: Demo Verification and Output Snapshot
+Status: TODO
 
 ## Objective
 Run and verify `scripts/demo.ts` in an end-to-end environment, ensure stability, and capture the execution output for inclusion in `DEMO.md`.

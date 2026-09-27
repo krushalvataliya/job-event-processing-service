@@ -1,4 +1,5 @@
 # Task 4.1: HTTP Server Setup and Middleware
+Status: TODO
 
 ## Objective
 Configure and bootstrap the Fastify HTTP server with structured logging, standardized error handling, request ID tracing, and route registration.
