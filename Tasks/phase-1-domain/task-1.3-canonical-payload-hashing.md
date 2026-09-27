@@ -1,5 +1,5 @@
 # Task 1.3: Canonical Payload Hashing
-Status: TODO
+Status: DONE
 
 ## Objective
 Implement deterministic canonical JSON hashing for events to distinguish exact replay requests (`200 OK`) from conflicting reuse of identical event IDs with modified content (`409 Conflict`).
