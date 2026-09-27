@@ -1,5 +1,5 @@
 # Task 4.5: GET /health (Readiness Probe)
-Status: TODO
+Status: DONE
 
 ## Objective
 Implement `GET /health` route returning detailed service and database readiness with clear documented status codes.
