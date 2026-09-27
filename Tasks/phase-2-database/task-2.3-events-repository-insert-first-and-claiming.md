@@ -1,5 +1,5 @@
 # Task 2.3: Events Repository (Insert-First and Claiming)
-Status: TODO
+Status: DONE
 
 ## Objective
 Implement `EventsRepository` encapsulating all data operations on the `events` collection: insert-first idempotent writes, duplicate key handling, atomic lease-based claims, attempt record logging, backoff rescheduling, completion, and failure recording.
