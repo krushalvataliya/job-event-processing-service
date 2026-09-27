@@ -1,5 +1,5 @@
 # Task 2.5: Database Integration Tests
-Status: TODO
+Status: DONE
 
 ## Objective
 Author rigorous integration tests running against a real MongoDB instance to validate unique indexes, concurrent insert races, lease claim concurrency, and conditional projection monotonicity.
