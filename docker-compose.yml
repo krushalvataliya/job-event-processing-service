@@ -31,6 +31,7 @@ services:
       - HOST=0.0.0.0
       - MONGO_URI=mongodb://mongo:27017/jobevents
       - LOG_LEVEL=info
+      - RUN_WORKER=false
     depends_on:
       mongo:
         condition: service_healthy

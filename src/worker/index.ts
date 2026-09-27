@@ -43,7 +43,12 @@ async function startWorkerPool() {
 }
 
 // Auto-run if executed directly
-if (process.argv[1]?.endsWith('worker/index.ts') || process.argv[1]?.endsWith('worker/index.js')) {
+const isDirectRun =
+  process.argv[1] &&
+  (process.argv[1].replace(/\\/g, '/').endsWith('worker/index.ts') ||
+    process.argv[1].replace(/\\/g, '/').endsWith('worker/index.js'));
+
+if (isDirectRun) {
   startWorkerPool().catch((err) => {
     console.error('Fatal worker pool error:', err);
     process.exit(1);

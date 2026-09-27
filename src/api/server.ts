@@ -2,6 +2,7 @@ import { buildApp } from './app.js';
 import { connectMongo, closeMongo } from '../db/client.js';
 import { ensureIndexes } from '../db/indexes.js';
 import { config } from '../config/index.js';
+import { startWorkerPool } from '../worker/index.js';
 
 async function startServer() {
   console.log('🚀 Starting Job Event Processing Service HTTP Server...');
@@ -20,6 +21,13 @@ async function startServer() {
     process.exit(1);
   }
 
+  // Start background worker pool if enabled (default: true for single-container cloud deployments like Render)
+  if (process.env.RUN_WORKER !== 'false') {
+    startWorkerPool().catch((err) => {
+      console.error('Background worker pool error:', err);
+    });
+  }
+
   const shutdown = async (signal: string) => {
     console.log(`\n🛑 Received ${signal}. Shutting down server...`);
     await app.close();
@@ -32,12 +40,10 @@ async function startServer() {
   process.on('SIGTERM', () => shutdown('SIGTERM'));
 }
 
-// Auto-start if run directly
-if (process.argv[1]?.endsWith('api/server.ts') || process.argv[1]?.endsWith('api/server.js')) {
-  startServer().catch((err) => {
-    console.error('Fatal server boot error:', err);
-    process.exit(1);
-  });
-}
+// Unconditionally auto-start server on execution
+startServer().catch((err) => {
+  console.error('Fatal server boot error:', err);
+  process.exit(1);
+});
 
 export { startServer };

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "High-reliability distributed job event ingestion and monotonic projection engine",
   "type": "module",
+  "main": "dist/src/api/server.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node dist/src/api/server.js",
