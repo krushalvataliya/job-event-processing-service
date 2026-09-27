@@ -1,5 +1,5 @@
 # Task 2.4: Jobs Repository (Conditional Projection & Tombstone)
-Status: TODO
+Status: DONE
 
 ## Objective
 Implement `JobsRepository` encapsulating monotonic projection updates, archive tombstones, archive-before-upsert handling, and cursor-based pagination queries.
