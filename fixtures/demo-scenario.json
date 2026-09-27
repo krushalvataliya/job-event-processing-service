@@ -1,0 +1,447 @@
+{
+  "description": "20-Request Verification Scenario covering Concurrency, Version Monotonicity, Flaky Verification, Tombstones, and Tenant Isolation",
+  "requests": [
+    {
+      "step": 1,
+      "phase": 1,
+      "name": "Valid initial upsert v1",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-01",
+        "externalJobId": "demo-job-alpha",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Senior Backend Engineer",
+          "company": "Artha Enterprise",
+          "location": "Surat, Gujarat",
+          "experienceMin": 3,
+          "experienceMax": 6,
+          "applyUrl": "https://artha.link/jobs/alpha-1",
+          "skills": ["TypeScript", "MongoDB", "Distributed Systems"]
+        }
+      }
+    },
+    {
+      "step": 2,
+      "phase": 1,
+      "name": "Exact duplicate replay of step 1",
+      "expectedStatus": 200,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-01",
+        "externalJobId": "demo-job-alpha",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Senior Backend Engineer",
+          "company": "Artha Enterprise",
+          "location": "Surat, Gujarat",
+          "experienceMin": 3,
+          "experienceMax": 6,
+          "applyUrl": "https://artha.link/jobs/alpha-1",
+          "skills": ["TypeScript", "MongoDB", "Distributed Systems"]
+        }
+      }
+    },
+    {
+      "step": 3,
+      "phase": 1,
+      "name": "Conflicting payload reuse of eventId demo-evt-01",
+      "expectedStatus": 409,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-01",
+        "externalJobId": "demo-job-alpha",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Conflicting Lead Engineer Title",
+          "company": "Artha Enterprise",
+          "location": "Surat, Gujarat",
+          "experienceMin": 3,
+          "experienceMax": 6,
+          "applyUrl": "https://artha.link/jobs/alpha-1",
+          "skills": ["TypeScript", "MongoDB"]
+        }
+      }
+    },
+    {
+      "step": 4,
+      "phase": 1,
+      "name": "Invalid request: whitespace in identifier",
+      "expectedStatus": 400,
+      "body": {
+        "tenantId": " demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-04-whitespace",
+        "externalJobId": "demo-job-ws",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Frontend Engineer",
+          "company": "Artha",
+          "location": "Surat",
+          "experienceMin": 1,
+          "experienceMax": 3,
+          "applyUrl": "https://artha.link/jobs/ws",
+          "skills": ["React"]
+        }
+      }
+    },
+    {
+      "step": 5,
+      "phase": 1,
+      "name": "Corrected resubmission reusing demo-evt-04-whitespace",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-04-whitespace",
+        "externalJobId": "demo-job-ws",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Frontend Engineer",
+          "company": "Artha",
+          "location": "Surat",
+          "experienceMin": 1,
+          "experienceMax": 3,
+          "applyUrl": "https://artha.link/jobs/ws",
+          "skills": ["React"]
+        }
+      }
+    },
+    {
+      "step": 6,
+      "phase": 1,
+      "name": "Cross-tenant isolation: identical IDs in secondary tenant",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-secondary",
+        "sourceId": "main",
+        "eventId": "demo-evt-01",
+        "externalJobId": "demo-job-alpha",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Tenant B Isolated Developer",
+          "company": "Tenant B Labs",
+          "location": "Remote",
+          "experienceMin": 1,
+          "experienceMax": 2,
+          "applyUrl": "https://tenant-b.test/jobs/alpha",
+          "skills": ["Node"]
+        }
+      }
+    },
+    {
+      "step": 7,
+      "phase": 1,
+      "name": "Cross-source isolation: identical externalJobId in partner source",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "partner-feed",
+        "eventId": "demo-evt-07-partner",
+        "externalJobId": "demo-job-alpha",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Partner Feed Job Alpha",
+          "company": "Partner Org",
+          "location": "Mumbai",
+          "experienceMin": 2,
+          "experienceMax": 4,
+          "applyUrl": "https://partner.test/jobs/alpha",
+          "skills": ["Python"]
+        }
+      }
+    },
+    {
+      "step": 8,
+      "phase": 1,
+      "name": "Out-of-order version arrival: v3 arrives before v2",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-08-v3",
+        "externalJobId": "demo-job-ooo",
+        "version": 3,
+        "operation": "upsert",
+        "payload": {
+          "title": "Principal Architect v3",
+          "company": "Artha Enterprise",
+          "location": "Surat",
+          "experienceMin": 8,
+          "experienceMax": 15,
+          "applyUrl": "https://artha.link/jobs/ooo-3",
+          "skills": ["Architecture", "TypeScript"]
+        }
+      }
+    },
+    {
+      "step": 9,
+      "phase": 1,
+      "name": "Archive-before-upsert tombstone created at v2",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-09-arch",
+        "externalJobId": "demo-job-archived-first",
+        "version": 2,
+        "operation": "archive"
+      }
+    },
+    {
+      "step": 10,
+      "phase": 1,
+      "name": "Transient upstream 503 recovering on 3rd attempt",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-10",
+        "externalJobId": "demo-job-transient",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Reliability Specialist",
+          "company": "Artha Enterprise",
+          "location": "Surat",
+          "experienceMin": 3,
+          "experienceMax": 5,
+          "applyUrl": "https://artha.link/jobs/transient-1",
+          "skills": ["SRE", "Observability"]
+        }
+      }
+    },
+    {
+      "step": 11,
+      "phase": 1,
+      "name": "Permanent upstream verification failure (422)",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-11",
+        "externalJobId": "demo-job-perm-fail",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Unprocessable Posting",
+          "company": "Invalid Entity",
+          "location": "Unknown",
+          "experienceMin": 0,
+          "experienceMax": 1,
+          "applyUrl": "https://artha.link/jobs/invalid",
+          "skills": ["None"]
+        }
+      }
+    },
+    {
+      "step": 12,
+      "phase": 1,
+      "name": "Upstream rate-limit exhaustion (3x 429)",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-12",
+        "externalJobId": "demo-job-exhaust",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Rate Limited Role",
+          "company": "Artha Enterprise",
+          "location": "Surat",
+          "experienceMin": 1,
+          "experienceMax": 3,
+          "applyUrl": "https://artha.link/jobs/rate-limited",
+          "skills": ["APIs"]
+        }
+      }
+    },
+    {
+      "step": 13,
+      "phase": 1,
+      "name": "Initial valid state v1 for higher-version failure test",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-13",
+        "externalJobId": "demo-job-higher-fail",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Stable Baseline v1",
+          "company": "Artha Enterprise",
+          "location": "Surat",
+          "experienceMin": 2,
+          "experienceMax": 4,
+          "applyUrl": "https://artha.link/jobs/higher-fail-1",
+          "skills": ["Stability"]
+        }
+      }
+    },
+    {
+      "step": 14,
+      "phase": 1,
+      "name": "Initial active state v1 for reactivation test",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-14",
+        "externalJobId": "demo-job-reactivate",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Lifecycle Engineer v1",
+          "company": "Artha Enterprise",
+          "location": "Surat",
+          "experienceMin": 2,
+          "experienceMax": 5,
+          "applyUrl": "https://artha.link/jobs/reactivate-1",
+          "skills": ["Lifecycle"]
+        }
+      }
+    },
+    {
+      "step": 15,
+      "phase": 2,
+      "name": "Delayed stale upsert v2 arriving after v3 has settled",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-15-stale-v2",
+        "externalJobId": "demo-job-ooo",
+        "version": 2,
+        "operation": "upsert",
+        "payload": {
+          "title": "Outdated Stale Title v2",
+          "company": "Artha Enterprise",
+          "location": "Surat",
+          "experienceMin": 5,
+          "experienceMax": 8,
+          "applyUrl": "https://artha.link/jobs/ooo-2",
+          "skills": ["Legacy"]
+        }
+      }
+    },
+    {
+      "step": 16,
+      "phase": 2,
+      "name": "Delayed stale upsert v1 rejected by archive tombstone v2",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-16-stale-after-archive",
+        "externalJobId": "demo-job-archived-first",
+        "version": 1,
+        "operation": "upsert",
+        "payload": {
+          "title": "Zombie Resurrection v1",
+          "company": "Ghost",
+          "location": "Void",
+          "experienceMin": 1,
+          "experienceMax": 2,
+          "applyUrl": "https://artha.link/jobs/zombie",
+          "skills": ["Dead"]
+        }
+      }
+    },
+    {
+      "step": 17,
+      "phase": 2,
+      "name": "Archive event v2 archiving active job",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-17-arch",
+        "externalJobId": "demo-job-reactivate",
+        "version": 2,
+        "operation": "archive"
+      }
+    },
+    {
+      "step": 18,
+      "phase": 2,
+      "name": "Higher upsert v3 reactivating archived job",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-18-reactivate-v3",
+        "externalJobId": "demo-job-reactivate",
+        "version": 3,
+        "operation": "upsert",
+        "payload": {
+          "title": "Reactivated Lead Engineer v3",
+          "company": "Artha Enterprise",
+          "location": "Surat",
+          "experienceMin": 5,
+          "experienceMax": 10,
+          "applyUrl": "https://artha.link/jobs/reactivate-3",
+          "skills": ["Leadership", "Cloud"]
+        }
+      }
+    },
+    {
+      "step": 19,
+      "phase": 2,
+      "name": "Higher version v2 verification failure preserves v1 projection",
+      "expectedStatus": 202,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-19",
+        "externalJobId": "demo-job-higher-fail",
+        "version": 2,
+        "operation": "upsert",
+        "payload": {
+          "title": "Broken Higher Version v2",
+          "company": "Artha Enterprise",
+          "location": "Surat",
+          "experienceMin": 4,
+          "experienceMax": 6,
+          "applyUrl": "https://artha.link/jobs/higher-fail-2",
+          "skills": ["Broken"]
+        }
+      }
+    },
+    {
+      "step": 20,
+      "phase": 2,
+      "name": "Exact replay check on Phase 2 reactivation",
+      "expectedStatus": 200,
+      "body": {
+        "tenantId": "demo-tenant-primary",
+        "sourceId": "main",
+        "eventId": "demo-evt-18-reactivate-v3",
+        "externalJobId": "demo-job-reactivate",
+        "version": 3,
+        "operation": "upsert",
+        "payload": {
+          "title": "Reactivated Lead Engineer v3",
+          "company": "Artha Enterprise",
+          "location": "Surat",
+          "experienceMin": 5,
+          "experienceMax": 10,
+          "applyUrl": "https://artha.link/jobs/reactivate-3",
+          "skills": ["Leadership", "Cloud"]
+        }
+      }
+    }
+  ]
+}

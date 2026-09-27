@@ -1,5 +1,5 @@
 # Task 5.2: Demo Scenario 20-Requests Fixture
-Status: TODO
+Status: DONE
 
 ## Objective
 Author `fixtures/demo-scenario.json` containing the exact 20-request test scenario split into Phase 1 and Phase 2, covering every edge case specified in the PRD.

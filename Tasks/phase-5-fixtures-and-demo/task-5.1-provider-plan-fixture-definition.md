@@ -1,5 +1,5 @@
 # Task 5.1: Provider Plan Fixture Definition
-Status: TODO
+Status: DONE
 
 ## Objective
 Author the exact `fixtures/provider-plan.json` fixture file defining the simulated external verification behavior for all demo scenarios.
