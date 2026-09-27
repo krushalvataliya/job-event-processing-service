@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ../../
+      dockerfile: docker/Dockerfile
+    container_name: jobevents-api-standalone
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file:
+      - path: ../../.env
+        required: false
+      - path: .env
+        required: false
+    environment:
+      - PORT=3000
+      - HOST=0.0.0.0
+      - MONGO_URI=${MONGO_URI}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: >
+      sh -c "node dist/scripts/setup.js && node dist/src/api/server.js"
+
+  worker:
+    build:
+      context: ../../
+      dockerfile: docker/Dockerfile
+    container_name: jobevents-worker-standalone
+    restart: unless-stopped
+    env_file:
+      - path: ../../.env
+        required: false
+      - path: .env
+        required: false
+    environment:
+      - MONGO_URI=${MONGO_URI}
+      - WORKER_COUNT=${WORKER_COUNT:-2}
+      - WORKER_POLL_INTERVAL_MS=${WORKER_POLL_INTERVAL_MS:-200}
+      - WORKER_LEASE_MS=${WORKER_LEASE_MS:-15000}
+      - RETRY_BASE_DELAY_MS=${RETRY_BASE_DELAY_MS:-500}
+      - RETRY_MAX_ATTEMPTS=${RETRY_MAX_ATTEMPTS:-3}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - api
+    command: ["node", "dist/src/worker/index.js"]

@@ -14,7 +14,13 @@
     "setup": "tsx scripts/setup.ts",
     "demo": "tsx scripts/demo.ts",
     "load-test": "tsx scripts/load-test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "docker:mongo:up": "docker compose -f docker/1-mongo-only/docker-compose.yml up -d",
+    "docker:mongo:down": "docker compose -f docker/1-mongo-only/docker-compose.yml down",
+    "docker:full:up": "docker compose -f docker/2-full-stack/docker-compose.yml up -d --build",
+    "docker:full:down": "docker compose -f docker/2-full-stack/docker-compose.yml down",
+    "docker:node:up": "docker compose -f docker/3-node-only/docker-compose.yml up -d --build",
+    "docker:node:down": "docker compose -f docker/3-node-only/docker-compose.yml down"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

@@ -65,12 +65,14 @@ Tasks/
 │   ├── task-6.1-load-test-generator-and-orchestrator.md
 │   ├── task-6.2-latency-throughput-and-drain-instrumentation.md
 │   └── task-6.3-load-execution-and-results-capture.md
-└── phase-7-deliverables-and-qc/
-    ├── task-7.1-architecture-design-document-DESIGN-md.md
-    ├── task-7.2-scalability-analysis-document-SCALE-md.md
-    ├── task-7.3-readme-and-demo-walkthrough-guide.md
-    ├── task-7.4-ai-usage-tracking-AI_USAGE-md.md
-    └── task-7.5-post-generation-qc-pass-and-QC_REPORT-md.md
+├── phase-7-deliverables-and-qc/
+│   ├── task-7.1-architecture-design-document-DESIGN-md.md
+│   ├── task-7.2-scalability-analysis-document-SCALE-md.md
+│   ├── task-7.3-readme-and-demo-walkthrough-guide.md
+│   ├── task-7.4-ai-usage-tracking-AI_USAGE-md.md
+│   └── task-7.5-post-generation-qc-pass-and-QC_REPORT-md.md
+└── phase-8-docker/
+    └── task-8.1-docker-deployments.md
 ```
 
 ---
@@ -87,7 +89,8 @@ Tasks/
 | **Phase 5** | Fixtures & Demo Script | 20-Request Scenario, Provider Plan, Automated `demo.ts` | 4 Tasks | ✅ **DONE** (4/4) |
 | **Phase 6** | Load & Performance Testing | 1,000+ Events, 200 Replays, Out-of-Order Versions, Latency Profiling | 3 Tasks | ✅ **DONE** (3/3) |
 | **Phase 7** | Docs & Quality Control | `DESIGN.md`, `SCALE.md`, `README.md`, `AI_USAGE.md`, `QC_REPORT.md` | 5 Tasks | ✅ **DONE** (5/5) |
-| **Total** | **Full System Lifecycle** | **Complete Production Job Event Processing Service** | **33 Tasks** | 🚀 **100% DONE** |
+| **Phase 8** | Docker Deployment Topologies | 3 Modes (Mongo-Only, Full-Stack, Node-Only), Master & Mode READMEs | 1 Task | ✅ **DONE** (1/1) |
+| **Total** | **Full System Lifecycle** | **Complete Production Job Event Processing Service** | **34 Tasks** | 🚀 **100% DONE** |
 
 ---
 
