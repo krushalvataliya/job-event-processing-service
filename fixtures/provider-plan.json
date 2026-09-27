@@ -1,0 +1,6 @@
+{
+  "demo-event-retry-recover": ["503", "503", "success"],
+  "demo-event-rate-limit-recover": ["429", "success"],
+  "demo-event-retry-exhaust": ["503", "503", "503"],
+  "demo-event-permanent-fail": ["422"]
+}
