@@ -5,6 +5,7 @@ import { JobsRepository } from '../db/jobs-repository.js';
 import { registerEventRoutes } from './routes/events.js';
 import { registerJobRoutes } from './routes/jobs.js';
 import { registerHealthRoutes } from './routes/health.js';
+import { renderDashboardHtml } from './ui.js';
 
 export interface AppOptions {
   db: Db;
@@ -34,6 +35,13 @@ export function buildApp(options: AppOptions): FastifyInstance {
       },
     });
   });
+
+  // Root Developer Portal & API Console UI
+  const serveUI = async (_request: any, reply: any) => {
+    reply.type('text/html; charset=utf-8').send(renderDashboardHtml());
+  };
+  app.get('/', serveUI);
+  app.get('/ui', serveUI);
 
   // Register modular routes
   registerEventRoutes(app, eventsRepo);

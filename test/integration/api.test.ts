@@ -249,4 +249,32 @@ describe('Task 4.6: API Contract, Status Codes, and Tenant Isolation', () => {
       expect(body.checks.mongodb.status).toBe('ok');
     });
   });
+
+  describe('GET / (Developer Portal & API Console UI)', () => {
+    it('serves interactive developer portal HTML at GET /', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/',
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['content-type']).toContain('text/html');
+      expect(response.body).toContain('Job Event Processing Service');
+      expect(response.body).toContain('Live API Playground');
+      expect(response.body).toContain('Architecture & Specs');
+      expect(response.body).toContain('POST');
+      expect(response.body).toContain('/events');
+    });
+
+    it('also serves the portal at GET /ui', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/ui',
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['content-type']).toContain('text/html');
+      expect(response.body).toContain('Job Event Processing Service');
+    });
+  });
 });
