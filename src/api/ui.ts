@@ -377,6 +377,60 @@ export function renderDashboardHtml(): string {
       background: rgba(255, 255, 255, 0.09);
     }
 
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.12);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: #ef4444;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .btn-danger:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .toast-banner {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: #151d2f;
+      border: 1px solid var(--border);
+      padding: 12px 18px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(100px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .toast-banner.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     /* Response Display Box */
     .response-container {
       background: #07090f;
@@ -592,11 +646,16 @@ export function renderDashboardHtml(): string {
       </button>
     </div>
 
-    <!-- Real-time Health Telemetry -->
-    <div class="health-telemetry">
-      <span class="status-dot" id="db-status-dot"></span>
-      <span id="db-status-text">MongoDB: Checking...</span>
-      <span class="tag-pill" id="db-latency-pill">-- ms</span>
+    <!-- Real-time Health Telemetry & Actions -->
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div class="health-telemetry">
+        <span class="status-dot" id="db-status-dot"></span>
+        <span id="db-status-text">MongoDB: Checking...</span>
+        <span class="tag-pill" id="db-latency-pill">-- ms</span>
+      </div>
+      <button class="btn-danger" id="btn-clear-db" onclick="clearDatabase()" title="Purge events and jobs from database">
+        <span>🗑️</span> Clear DB
+      </button>
     </div>
   </header>
 
@@ -737,7 +796,10 @@ export function renderDashboardHtml(): string {
                 <span class="badge-method badge-get">GET</span>
                 <span>/jobs &mdash; Materialized Projections</span>
               </div>
-              <button class="btn-secondary" onclick="fetchJobs()">Query Projections</button>
+              <div style="display:flex; gap:6px;">
+                <button class="btn-secondary" onclick="fetchJobs()">Query Projections</button>
+                <button class="btn-secondary" style="color:#f87171; border-color:rgba(239,68,68,0.3);" onclick="clearTenantRecords()" title="Clear records for this tenant only">Clear Tenant</button>
+              </div>
             </div>
             <div class="card-body">
               <div class="form-row">
@@ -1225,7 +1287,82 @@ curl http://localhost:3000/health
         container.innerHTML = '<div style="color:var(--error); padding:1rem;">Failed to fetch jobs: ' + err.message + '</div>';
       }
     }
+
+    // Toast Notification Banner
+    function showToast(message, isError = false) {
+      let toast = document.getElementById('toast-banner');
+      if (!toast) return;
+      toast.textContent = message;
+      toast.style.borderColor = isError ? 'rgba(239, 68, 68, 0.5)' : 'rgba(16, 185, 129, 0.5)';
+      toast.style.color = isError ? '#f87171' : '#34d399';
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 4500);
+    }
+
+    // Clear All Records from Database
+    async function clearDatabase() {
+      const choice = confirm(
+        '⚠️ Are you sure you want to clear the database?\\n\\n' +
+        '• This will permanently DELETE all events and job projections across all tenants.\\n' +
+        '• Click OK to proceed, or Cancel to abort.'
+      );
+      if (!choice) return;
+
+      const btn = document.getElementById('btn-clear-db');
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳</span> Purging...';
+
+      try {
+        const res = await fetch('/admin/clear-db', { method: 'POST' });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showToast('✅ Database purged! Removed ' + data.deletedEvents + ' events and ' + data.deletedJobs + ' jobs.');
+          document.getElementById('post-response-output').textContent = '// Database cleared at ' + new Date().toLocaleTimeString() + '\\n' + JSON.stringify(data, null, 2);
+          document.getElementById('event-status-output').textContent = '// Database was cleared.';
+          const badge = document.getElementById('event-state-badge');
+          if (badge) badge.style.display = 'none';
+          document.getElementById('jobs-cards-container').innerHTML = '<div style="color:var(--text-dim); text-align:center; padding:2rem 1rem;">Database is clean and empty. Dispatch an event to project a new job!</div>';
+        } else {
+          showToast('❌ Failed to clear database: ' + (data.error?.message || 'Server error'), true);
+        }
+      } catch (err) {
+        showToast('❌ Network error: ' + err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>🗑️</span> Clear DB';
+      }
+    }
+
+    // Clear Specific Tenant Records
+    async function clearTenantRecords() {
+      const tenant = document.getElementById('inp-jobs-tenant')?.value?.trim();
+      if (!tenant) {
+        showToast('❌ Please specify a Tenant ID to clear', true);
+        return;
+      }
+
+      const choice = confirm('⚠️ Delete all events and job projections for tenant "' + tenant + '"?');
+      if (!choice) return;
+
+      try {
+        const res = await fetch('/admin/clear-db?tenantId=' + encodeURIComponent(tenant), { method: 'POST' });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showToast('✅ Cleared tenant "' + tenant + '": ' + data.deletedEvents + ' events, ' + data.deletedJobs + ' jobs deleted.');
+          fetchJobs();
+        } else {
+          showToast('❌ Failed: ' + (data.error?.message || 'Server error'), true);
+        }
+      } catch (err) {
+        showToast('❌ Network error: ' + err.message, true);
+      }
+    }
   </script>
+  <div id="toast-banner" class="toast-banner"></div>
 </body>
 </html>
 `;

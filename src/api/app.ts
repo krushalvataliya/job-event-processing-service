@@ -5,6 +5,7 @@ import { JobsRepository } from '../db/jobs-repository.js';
 import { registerEventRoutes } from './routes/events.js';
 import { registerJobRoutes } from './routes/jobs.js';
 import { registerHealthRoutes } from './routes/health.js';
+import { registerAdminRoutes } from './routes/admin.js';
 import { renderDashboardHtml } from './ui.js';
 
 export interface AppOptions {
@@ -47,6 +48,7 @@ export function buildApp(options: AppOptions): FastifyInstance {
   registerEventRoutes(app, eventsRepo);
   registerJobRoutes(app, jobsRepo);
   registerHealthRoutes(app, options.db);
+  registerAdminRoutes(app, options.db);
 
   return app;
 }

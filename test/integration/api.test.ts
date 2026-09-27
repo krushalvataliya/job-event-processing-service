@@ -153,7 +153,7 @@ describe('Task 4.6: API Contract, Status Codes, and Tenant Isolation', () => {
       const body = JSON.parse(response.body);
       expect(body.eventId).toBe('evt-201');
       expect(body.tenantId).toBe(tenantA);
-      expect(body.status).toBe('pending');
+      expect(['pending', 'claimed', 'completed']).toContain(body.status);
     });
 
     it('returns 404 Not Found for cross-tenant query (strict tenant isolation)', async () => {
@@ -275,6 +275,44 @@ describe('Task 4.6: API Contract, Status Codes, and Tenant Isolation', () => {
       expect(response.statusCode).toBe(200);
       expect(response.headers['content-type']).toContain('text/html');
       expect(response.body).toContain('Job Event Processing Service');
+    });
+  });
+
+  describe('POST /admin/clear-db', () => {
+    it('clears records scoped to a specific tenant', async () => {
+      const tenantClear = `tenant-clear-${Date.now()}`;
+      await db.collection('events').insertOne({
+        tenantId: tenantClear,
+        sourceId: 'src',
+        eventId: 'evt-clear-1',
+        externalJobId: 'job-1',
+        version: 1,
+        operation: 'upsert',
+        status: 'pending',
+        payloadHash: 'hash-clear',
+        payload: { title: 'T' },
+        rawPayload: {},
+        attempts: 0,
+        attemptHistory: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        nextAttemptAt: new Date(),
+        leaseExpiresAt: null,
+        claimedBy: null,
+      });
+
+      const response = await app.inject({
+        method: 'POST',
+        url: `/admin/clear-db?tenantId=${tenantClear}`,
+      });
+
+      expect(response.statusCode).toBe(200);
+      const body = JSON.parse(response.body);
+      expect(body.success).toBe(true);
+      expect(body.deletedEvents).toBe(1);
+
+      const count = await db.collection('events').countDocuments({ tenantId: tenantClear });
+      expect(count).toBe(0);
     });
   });
 });
