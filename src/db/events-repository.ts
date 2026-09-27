@@ -94,19 +94,26 @@ export class EventsRepository {
   async claimNextEvent(
     workerId: string,
     leaseDurationMs: number,
-    now: Date = new Date()
+    now: Date = new Date(),
+    tenantId?: string
   ): Promise<JobEventDoc | null> {
     const leaseExpiresAt = new Date(now.getTime() + leaseDurationMs);
 
+    const query: any = {
+      status: { $in: ['pending', 'claimed'] },
+      nextAttemptAt: { $lte: now },
+      $or: [
+        { status: 'pending' },
+        { leaseExpiresAt: { $lt: now } }, // Recover crashed/abandoned workers
+      ],
+    };
+
+    if (tenantId) {
+      query.tenantId = tenantId;
+    }
+
     const doc = await this.collection.findOneAndUpdate(
-      {
-        status: { $in: ['pending', 'claimed'] },
-        nextAttemptAt: { $lte: now },
-        $or: [
-          { status: 'pending' },
-          { leaseExpiresAt: { $lt: now } }, // Recover crashed/abandoned workers
-        ],
-      },
+      query,
       {
         $set: {
           status: 'claimed',

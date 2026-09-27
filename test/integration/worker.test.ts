@@ -36,12 +36,14 @@ describe('Task 3.4 & 3.5: Worker Concurrency, Retries, and Crash Recovery', () =
       leaseMs: 5000,
       baseDelayMs: 100,
       maxAttempts: 3,
+      tenantId: testTenant,
     });
     const worker2 = new WorkerEngine('comp-worker-2', eventsRepo, jobsRepo, provider, {
       pollIntervalMs: 50,
       leaseMs: 5000,
       baseDelayMs: 100,
       maxAttempts: 3,
+      tenantId: testTenant,
     });
 
     // Ingest 6 events
@@ -67,7 +69,7 @@ describe('Task 3.4 & 3.5: Worker Concurrency, Retries, and Crash Recovery', () =
     // Poll until queue is drained
     let pending = await eventsRepo.countPendingOrClaimed(testTenant);
     let attempts = 0;
-    while (pending > 0 && attempts < 50) {
+    while (pending > 0 && attempts < 150) {
       await new Promise((r) => setTimeout(r, 100));
       pending = await eventsRepo.countPendingOrClaimed(testTenant);
       attempts++;

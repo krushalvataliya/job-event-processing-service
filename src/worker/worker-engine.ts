@@ -14,6 +14,7 @@ export interface WorkerEngineOptions {
   leaseMs: number;
   baseDelayMs: number;
   maxAttempts: number;
+  tenantId?: string;
 }
 
 export class WorkerEngine {
@@ -79,7 +80,9 @@ export class WorkerEngine {
     try {
       const event = await this.eventsRepo.claimNextEvent(
         this.workerId,
-        this.options.leaseMs
+        this.options.leaseMs,
+        new Date(),
+        this.options.tenantId
       );
 
       if (!event) {

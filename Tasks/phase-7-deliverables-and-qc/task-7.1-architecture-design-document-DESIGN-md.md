@@ -1,5 +1,5 @@
 # Task 7.1: Architecture Design Document (DESIGN.md)
-Status: TODO
+Status: DONE
 
 ## Objective
 Author the comprehensive `DESIGN.md` architectural document detailing invariants, work lifecycle, atomicity boundaries, failure mode recovery, crash consumption semantics, rejected alternatives, and operational tradeoffs.

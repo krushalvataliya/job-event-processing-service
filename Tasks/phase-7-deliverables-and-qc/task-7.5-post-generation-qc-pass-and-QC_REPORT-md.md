@@ -1,5 +1,5 @@
 # Task 7.5: Post-Generation QC Pass and QC_REPORT.md
-Status: TODO
+Status: DONE
 
 ## Objective
 Execute the mandatory rigorous post-generation quality control pass after code freeze, challenge 3 distinct failure hypotheses, verify documentation claims against actual code, and record all findings in `QC_REPORT.md` tied to the final Git commit SHA.
